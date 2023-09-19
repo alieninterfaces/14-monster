@@ -4,7 +4,7 @@ const gl = canvas.getContext("webgl");
 let useSecondVideo = false;
 
 const initialValues = {
-  distortionAmount: 1.5, // Adjust this value to control the distortion strength
+  distortionAmount: 1.0, // Adjust this value to control the distortion strength
   exposureValue: 1.0,
   contrastValue: 1.0,
   brightnessValue: 0, // Adjust this value for brightness control
@@ -31,9 +31,31 @@ video.autoplay = true;
 
 const video2 = document.createElement("video");
 
+console.log("hi");
+let loaded = false;
+let loaded2 = false;
 video.addEventListener("canplaythrough", () => {
+  if (loaded) return;
+  loaded = true;
+
+  console.log("video loaded");
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
+
+  /*
+  const canvasAspect = canvas.width / canvas.height;
+  const videoAspect = video.videoWidth / video.videoHeight;
+
+  if (canvasAspect < videoAspect) {
+    // Video is wider than the canvas
+    const scaledHeight = canvas.width / videoAspect;
+    canvas.height = scaledHeight;
+  } else {
+    // Video is taller than the canvas
+    const scaledWidth = canvas.height * videoAspect;
+    canvas.width = scaledWidth;
+  }
+  */
 
   video2.src = "/assets/videos/header2.mp4";
   video2.loop = true;
@@ -41,6 +63,10 @@ video.addEventListener("canplaythrough", () => {
   video2.autoplay = true;
 
   video2.addEventListener("canplaythrough", () => {
+    if (loaded2) return;
+    loaded2 = true;
+
+    console.log("video2 loaded");
     init();
   });
 });
@@ -56,8 +82,8 @@ function init() {
                 void main() {
                     // Map the vertex position to the canvas size
                     vec2 position = a_position * vec2(1.0, -1.0);
-                    gl_Position = vec4(position, 0, 1);
                     v_texCoord = a_texCoord;
+                    gl_Position = vec4(position, 0, 1);
                 }
             `;
 
@@ -89,11 +115,7 @@ function init() {
         // Sample the video texture with the distorted texture coordinates
         vec4 texColor;
 
-        //if (u_useSecondVideo) {
-        //    texColor = texture2D(u_videoTexture2, distortedTexCoord);
-        //} else {
-            texColor = texture2D(u_videoTexture, distortedTexCoord);
-       // }
+        texColor = texture2D(u_videoTexture, distortedTexCoord);
 
         // Apply exposure adjustment
         texColor *= u_exposure;
@@ -206,44 +228,94 @@ function init() {
 
     if (useSecondVideo) {
       // Set up the second video texture
+      //gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, videoTexture2);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video2);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     } else {
       // Set up the first video texture
+      //gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, videoTexture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     }
 
     requestAnimationFrame(draw);
   }
 
+  //document.body.appendChild(video);
+  //document.body.appendChild(video2);
   video.play();
   video2.play();
   draw();
 }
 
-window.addEventListener("click", () => {
-  console.log("one");
+const buttons = document.querySelectorAll(".button");
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    transitionOut();
+  });
+});
+//window.addEventListener("click", () => transitionOut());
+
+const body = document.querySelector("body");
+const sectionA = document.querySelector(".sectionA");
+const sectionB = document.querySelector(".sectionB");
+
+sectionB.style.display = "none";
+
+function transitionOut() {
+  //body.classList.toggle("white");
+
+  sectionA.style.opacity = 0;
+  sectionB.style.opacity = 0;
+
   const tweenIn = new Tween({
     object: values,
     targetValue: targetValues,
-    duration: 800,
+    duration: 400,
     easingFunction: easeOutQuad,
+    onComplete: () => transitionIn(),
+  });
+}
+
+function transitionIn() {
+  useSecondVideo = !useSecondVideo;
+
+  body.classList.remove("white");
+  body.classList.toggle("dark");
+
+  const tweenOut = new Tween({
+    object: values,
+    targetValue: initialValues,
+    duration: 400,
+    easingFunction: easeInOutQuad,
     onComplete: () => {
-      useSecondVideo = !useSecondVideo;
-      console.log("go");
-      const tweenOut = new Tween({
-        object: values,
-        targetValue: initialValues,
-        duration: 400,
-        easingFunction: easeInOutQuad,
-      });
+      if (useSecondVideo) {
+        sectionA.style.display = "none";
+        sectionB.style.display = "block";
+        sectionB.style.opacity = 0;
+        setTimeout(() => {
+          sectionB.style.opacity = 1;
+        }, 100);
+      } else {
+        sectionA.style.display = "block";
+        sectionB.style.display = "none";
+        sectionA.style.opacity = 0;
+        setTimeout(() => {
+          sectionA.style.opacity = 1;
+        }, 100);
+      }
     },
+  });
+}
+
+const videos = document.querySelectorAll("video");
+videos.forEach((video) => {
+  //add mouse over play
+  video.addEventListener("mouseover", () => {
+    video.play();
+  });
+  //add mouse out pause
+  video.addEventListener("mouseout", () => {
+    video.pause();
   });
 });

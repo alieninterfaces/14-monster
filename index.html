@@ -3,20 +3,61 @@
   <head>
     <meta charset="UTF-8" />
     <title>WebGL Video Player</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
-      }
-      video {
-        position: absolute;
-        left: -9999px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <main>
+      <canvas id="canvas" width="800" height="600"></canvas>
+      <section class="sectionA">
+        <div class="top">
+          <header>
+            <div class="left">DARK CAVERNS</div>
+            <div>NEVERMORE</div>
+            <div class="right">
+              <svg class="button" width="50" height="50" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke-width="4"
+                  fill="#ff9933"
+                />
+              </svg>
+            </div>
+          </header>
+        </div>
+        <div>one fish</div>
+        <div class="grid">
+          <div class="video">
+            <video loop src="assets/videos/1-1.mp4" width="200px"></video>
+          </div>
+          <div class="video">
+            <video loop src="assets/videos/1-2.mp4" width="200px"></video>
+          </div>
+        </div>
+      </section>
+
+      <section class="sectionB">
+        <div class="top">
+          <header>
+            <div class="left">DARK PEAKS</div>
+            <div class="right">
+              <svg class="button" width="50" height="50" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke-width="4"
+                  fill="#00ffff"
+                  00ffff
+                />
+              </svg>
+            </div>
+          </header>
+        </div>
+        <div>one fish</div>
+      </section>
+    </main>
     <script src="tween.js"></script>
     <script src="main.js"></script>
   </body>
