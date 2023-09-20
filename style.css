@@ -59,6 +59,10 @@ header .right {
   text-align: right;
 }
 
+.mid {
+  padding: 20px;
+}
+
 .grid {
   padding: 20px;
   display: flex;
