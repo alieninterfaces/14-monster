@@ -63,6 +63,25 @@ header .right {
   padding: 20px;
 }
 
+.mid-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mid-grid {
+  display: grid;
+  grid-template-columns: 50px 1fr 130px;
+  gap: 20px;
+}
+
+.mid-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
 .grid {
   padding: 20px;
   display: flex;
