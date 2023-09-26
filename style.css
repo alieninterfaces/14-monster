@@ -1,10 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  background: #fff;
   color: white;
   font-family: sans-serif;
-  background: #07041b;
+  --background: #07041b;
+  background: var(--background);
   transition: background 0.5s ease;
 }
 
@@ -82,6 +82,91 @@ header .right {
   padding: 20px;
 }
 
+.mid-bottom2 {
+  display: flex;
+  align-items: center;
+}
+
+.mid-bottom2 svg {
+  margin-right: 20px;
+}
+
+.mid-flex {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 20px 0;
+  line-height: 2;
+}
+
+.mid-flex div {
+  flex: 1;
+}
+
+.mid-gradient {
+  position: relative;
+  border: 4px solid transparent;
+  border-radius: 16px;
+  background: var(--background);
+  background-clip: padding-box;
+  padding: 20px 20px 20px 0;
+  margin: 20px 0;
+  /* just to show box-shadow still works fine */
+  text-align: left;
+}
+
+.mid-gradient::after {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+  background: linear-gradient(#292548, #99504f);
+  content: "";
+  z-index: -1;
+  border-radius: 16px;
+
+  /* mask gradient*/
+  -webkit-mask-image: linear-gradient(
+    -90deg,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 80%
+  );
+}
+
+.mid-gradient span {
+  color: #2f6480;
+  margin-right: 10px;
+}
+
+.mid-list {
+  text-align: right;
+}
+
+.mid-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-right: 40px;
+}
+
+.mid-list li {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.mid-list li::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #2f6480;
+  top: 10px;
+  right: -40px;
+}
+
 .grid {
   padding: 20px;
   display: flex;
@@ -124,7 +209,7 @@ header .right {
 
 /* manage sections*/
 .dark {
-  background: #100721;
+  --background: #100721;
 }
 
 .white {
